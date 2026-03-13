@@ -1,0 +1,212 @@
+# GitHub REST API — Seed Data
+
+repos:
+- id: 748291563
+  name: "api-gateway"
+  full_name: "acme-corp/api-gateway"
+  description: "High-performance API gateway with rate limiting, auth, and request transformation"
+  private: false
+  owner:
+    id: 12345
+    login: "acme-corp"
+    name: "Acme Corp"
+    avatar_url: "https://avatars.githubusercontent.com/u/12345"
+    html_url: "https://github.com/acme-corp"
+    type: Organization
+  html_url: "https://github.com/acme-corp/api-gateway"
+  default_branch: "main"
+  language: "Go"
+  stargazers_count: 1247
+  forks_count: 89
+  open_issues_count: 23
+  archived: false
+  has_issues: true
+  has_wiki: true
+  created_at: "2024-06-15T10:00:00Z"
+  updated_at: "2025-03-12T14:30:00Z"
+  pushed_at: "2025-03-12T14:28:00Z"
+
+- id: 891034527
+  name: "frontend-kit"
+  full_name: "acme-corp/frontend-kit"
+  description: "React component library with design tokens, accessibility, and dark mode"
+  private: false
+  owner:
+    id: 12345
+    login: "acme-corp"
+    name: "Acme Corp"
+    avatar_url: "https://avatars.githubusercontent.com/u/12345"
+    html_url: "https://github.com/acme-corp"
+    type: Organization
+  html_url: "https://github.com/acme-corp/frontend-kit"
+  default_branch: "main"
+  language: "TypeScript"
+  stargazers_count: 438
+  forks_count: 31
+  open_issues_count: 12
+  archived: false
+  has_issues: true
+  has_wiki: false
+  created_at: "2024-09-20T08:00:00Z"
+  updated_at: "2025-03-11T16:45:00Z"
+  pushed_at: "2025-03-11T16:44:00Z"
+
+- id: 623847190
+  name: "ml-pipeline"
+  full_name: "acme-corp/ml-pipeline"
+  description: "End-to-end ML training and inference pipeline on Kubernetes"
+  private: true
+  owner:
+    id: 12345
+    login: "acme-corp"
+    name: "Acme Corp"
+    avatar_url: "https://avatars.githubusercontent.com/u/12345"
+    html_url: "https://github.com/acme-corp"
+    type: Organization
+  html_url: "https://github.com/acme-corp/ml-pipeline"
+  default_branch: "main"
+  language: "Python"
+  stargazers_count: 0
+  forks_count: 0
+  open_issues_count: 8
+  archived: false
+  has_issues: true
+  has_wiki: true
+  created_at: "2025-01-05T12:00:00Z"
+  updated_at: "2025-03-12T09:15:00Z"
+  pushed_at: "2025-03-12T09:14:00Z"
+
+issues:
+- id: 2847103
+  number: 142
+  title: "Rate limiter returns 500 instead of 429 under high concurrency"
+  body: "When we stress-test with 10k concurrent requests, the rate limiter occasionally panics and returns 500 instead of the expected 429. Stack trace attached."
+  state: open
+  labels:
+    - { name: "bug", color: "d73a4a" }
+    - { name: "priority: high", color: "b60205" }
+  assignees:
+    - { id: 67890, login: "elena-dev", name: "Elena Rodriguez" }
+  comments: 7
+  created_at: "2025-03-10T11:20:00Z"
+  updated_at: "2025-03-12T08:00:00Z"
+  closed_at: null
+
+- id: 2841055
+  number: 139
+  title: "Add OpenTelemetry tracing support"
+  body: "We need distributed tracing for debugging cross-service request flows. Proposing we add OpenTelemetry instrumentation to the gateway middleware."
+  state: open
+  labels:
+    - { name: "enhancement", color: "a2eeef" }
+    - { name: "good first issue", color: "7057ff" }
+  assignees: []
+  comments: 3
+  created_at: "2025-03-08T14:00:00Z"
+  updated_at: "2025-03-09T10:30:00Z"
+  closed_at: null
+
+- id: 2835901
+  number: 137
+  title: "Memory leak in WebSocket connection pool"
+  body: "After 48 hours of uptime, the gateway process grows to 4GB RSS. Heap dump shows leaked WebSocket connections not being cleaned up after client disconnect."
+  state: closed
+  labels:
+    - { name: "bug", color: "d73a4a" }
+    - { name: "priority: critical", color: "b60205" }
+  assignees:
+    - { id: 67890, login: "elena-dev", name: "Elena Rodriguez" }
+    - { id: 11111, login: "marcus-k", name: "Marcus Kim" }
+  comments: 12
+  created_at: "2025-03-05T09:00:00Z"
+  updated_at: "2025-03-07T17:45:00Z"
+  closed_at: "2025-03-07T17:45:00Z"
+
+pulls:
+- id: 5910283
+  number: 141
+  title: "fix: properly close WebSocket connections on client disconnect"
+  body: "Fixes #137. Adds a cleanup goroutine that monitors connection state and releases resources when the client disconnects or times out."
+  state: closed
+  head: { ref: "fix/ws-connection-leak", sha: "a1b2c3d4e5f6" }
+  base: { ref: "main", sha: "f6e5d4c3b2a1" }
+  draft: false
+  merged: true
+  mergeable: true
+  additions: 147
+  deletions: 23
+  changed_files: 4
+  created_at: "2025-03-06T10:00:00Z"
+  updated_at: "2025-03-07T17:44:00Z"
+  merged_at: "2025-03-07T17:44:00Z"
+
+- id: 5918472
+  number: 143
+  title: "feat: add request/response body logging with PII redaction"
+  body: "Adds configurable body logging to the request inspector middleware. Sensitive fields (SSN, credit card, auth tokens) are automatically redacted."
+  state: open
+  head: { ref: "feat/body-logging", sha: "b2c3d4e5f6a7" }
+  base: { ref: "main", sha: "a1b2c3d4e5f6" }
+  draft: false
+  merged: false
+  mergeable: true
+  additions: 312
+  deletions: 8
+  changed_files: 7
+  created_at: "2025-03-11T13:00:00Z"
+  updated_at: "2025-03-12T11:30:00Z"
+  merged_at: null
+
+- id: 5920198
+  number: 144
+  title: "chore: upgrade Go to 1.23, update all dependencies"
+  body: "Routine dependency update. Go 1.23 includes the new `range over func` feature which simplifies several of our iterators."
+  state: open
+  head: { ref: "chore/go-1.23-upgrade", sha: "c3d4e5f6a7b8" }
+  base: { ref: "main", sha: "a1b2c3d4e5f6" }
+  draft: true
+  merged: false
+  mergeable: true
+  additions: 1847
+  deletions: 1203
+  changed_files: 3
+  created_at: "2025-03-12T08:00:00Z"
+  updated_at: "2025-03-12T08:00:00Z"
+  merged_at: null
+
+users:
+- id: 12345
+  login: "acme-corp"
+  name: "Acme Corp"
+  avatar_url: "https://avatars.githubusercontent.com/u/12345"
+  html_url: "https://github.com/acme-corp"
+  type: Organization
+  bio: "Building the infrastructure for modern commerce"
+  public_repos: 24
+  followers: 1847
+  following: 0
+  created_at: "2020-03-15T10:00:00Z"
+
+- id: 67890
+  login: "elena-dev"
+  name: "Elena Rodriguez"
+  avatar_url: "https://avatars.githubusercontent.com/u/67890"
+  html_url: "https://github.com/elena-dev"
+  type: User
+  bio: "Staff Engineer @ Acme. Distributed systems, Go, Rust."
+  public_repos: 42
+  followers: 523
+  following: 89
+  created_at: "2018-08-20T12:00:00Z"
+
+- id: 11111
+  login: "marcus-k"
+  name: "Marcus Kim"
+  avatar_url: "https://avatars.githubusercontent.com/u/11111"
+  html_url: "https://github.com/marcus-k"
+  type: User
+  bio: "Senior SRE @ Acme. Kubernetes, observability, incident response."
+  public_repos: 18
+  followers: 210
+  following: 45
+  created_at: "2019-11-01T09:00:00Z"

@@ -1,0 +1,77 @@
+# GitHub REST API — Scenarios
+
+scenarios:
+  default:
+    description: Happy path — all CRUD operations on repos, issues, and PRs succeed normally.
+    auth_enabled: true
+    overrides: []
+
+  auth_failure:
+    description: All requests fail with 401 — simulating a revoked or expired personal access token.
+    auth_enabled: false
+    overrides:
+    - operation_id: '*'
+      response_status: 401
+      error_code: UNAUTHORIZED
+      error_detail: "Bad credentials. The token used is invalid or has been revoked."
+
+  rate_limited:
+    description: All requests return 403 with rate limit exceeded — simulating API abuse detection.
+    auth_enabled: true
+    overrides:
+    - operation_id: '*'
+      response_status: 403
+      error_code: RATE_LIMIT_EXCEEDED
+      error_detail: "API rate limit exceeded for user. See https://docs.github.com/rest/rate-limit"
+
+  repo_not_found:
+    description: Repository-scoped reads return 404 — simulating access to a deleted or private repo.
+    auth_enabled: true
+    overrides:
+    - operation_id: getRepo
+      response_status: 404
+      error_code: NOT_FOUND
+      error_detail: "Not Found"
+    - operation_id: listIssues
+      response_status: 404
+      error_code: NOT_FOUND
+      error_detail: "Not Found"
+    - operation_id: listPullRequests
+      response_status: 404
+      error_code: NOT_FOUND
+      error_detail: "Not Found"
+
+  merge_conflict:
+    description: Pull request operations fail with 409 — simulating merge conflicts.
+    auth_enabled: true
+    overrides:
+    - operation_id: updatePullRequest
+      response_status: 409
+      error_code: MERGE_CONFLICT
+      error_detail: "This branch has conflicts that must be resolved before it can be merged."
+
+  server_error:
+    description: All requests fail with 500 — simulating a GitHub service outage.
+    auth_enabled: true
+    overrides:
+    - operation_id: '*'
+      response_status: 500
+      error_code: INTERNAL_SERVER_ERROR
+      error_detail: "Server Error. GitHub is experiencing issues. Check https://githubstatus.com"
+
+  read_only:
+    description: Reads succeed but all writes return 403 — simulating a read-only token or archived repo.
+    auth_enabled: true
+    overrides:
+    - operation_id: createRepoForAuthenticatedUser
+      response_status: 403
+      error_code: FORBIDDEN
+      error_detail: "Resource not accessible by personal access token. Required scope: repo"
+    - operation_id: createIssue
+      response_status: 403
+      error_code: FORBIDDEN
+      error_detail: "Resource not accessible by personal access token. Required scope: repo"
+    - operation_id: createPullRequest
+      response_status: 403
+      error_code: FORBIDDEN
+      error_detail: "Resource not accessible by personal access token. Required scope: repo"

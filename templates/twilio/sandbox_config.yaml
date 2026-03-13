@@ -1,0 +1,80 @@
+# Twilio Messaging API — Sandbox Configuration
+
+resources:
+  messages:
+    id_field: sid
+    id_pattern: SM0000000000000000000000000000000
+    states:
+    - queued
+    - sending
+    - sent
+    - delivered
+    - undelivered
+    - failed
+    - canceled
+    initial_state: queued
+    status_field: status
+    transitions:
+      queued:
+      - sending
+      - canceled
+      - failed
+      sending:
+      - sent
+      - failed
+      - undelivered
+      sent:
+      - delivered
+      - undelivered
+      delivered: []
+      undelivered: []
+      failed: []
+      canceled: []
+
+  phone_numbers:
+    id_field: sid
+    id_pattern: PN0000000000000000000000000000000
+    states:
+    - in-use
+    - released
+    initial_state: in-use
+    status_field: status
+    transitions:
+      in-use:
+      - released
+      released: []
+
+  messaging_services:
+    id_field: sid
+    id_pattern: MG0000000000000000000000000000000
+    states:
+    - active
+    - suspended
+    initial_state: active
+    status_field: status
+    transitions:
+      active:
+      - suspended
+      suspended:
+      - active
+
+  usage_records:
+    id_field: category
+    id_pattern: null
+    states: []
+    initial_state: null
+    status_field: null
+    transitions: {}
+
+auth:
+  enabled: true
+  mode: relaxed
+  credentials_count: 1
+
+webhooks:
+  events:
+  - message.queued
+  - message.sent
+  - message.delivered
+  - message.failed
+  - message.undelivered

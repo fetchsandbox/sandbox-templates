@@ -1,0 +1,143 @@
+# Twilio Messaging API — Seed Data
+
+messages:
+- sid: SM8a1c2b3d4e5f6a7b8c9d0e1f2a3b4c5d
+  account_sid: AC00000000000000000000000000000001
+  to: "+14155551234"
+  from: "+15017122661"
+  body: "Your verification code is 847293. It expires in 10 minutes."
+  status: delivered
+  direction: outbound-api
+  num_segments: 1
+  price: "-0.0075"
+  price_unit: USD
+  error_code: null
+  error_message: null
+  date_created: "2025-03-10T14:32:00Z"
+  date_sent: "2025-03-10T14:32:01Z"
+  date_updated: "2025-03-10T14:32:03Z"
+
+- sid: SM7b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e
+  account_sid: AC00000000000000000000000000000001
+  to: "+442071234567"
+  from: "+15017122661"
+  body: "Hi Sarah, your order #ORD-4521 has been shipped! Track it at https://track.example.com/4521"
+  status: sent
+  direction: outbound-api
+  num_segments: 1
+  price: "-0.0120"
+  price_unit: USD
+  error_code: null
+  error_message: null
+  date_created: "2025-03-11T09:15:22Z"
+  date_sent: "2025-03-11T09:15:23Z"
+  date_updated: "2025-03-11T09:15:25Z"
+
+- sid: SM6c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f
+  account_sid: AC00000000000000000000000000000001
+  to: "+15017122661"
+  from: "+14155559876"
+  body: "STOP"
+  status: delivered
+  direction: inbound
+  num_segments: 1
+  price: "-0.0075"
+  price_unit: USD
+  error_code: null
+  error_message: null
+  date_created: "2025-03-12T16:45:00Z"
+  date_sent: null
+  date_updated: "2025-03-12T16:45:02Z"
+
+phone_numbers:
+- sid: PN1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d
+  phone_number: "+15017122661"
+  friendly_name: "Main SMS Line"
+  capabilities:
+    sms: true
+    mms: true
+    voice: true
+  status: in-use
+  sms_url: "https://example.com/sms"
+  voice_url: "https://example.com/voice"
+  date_created: "2025-01-05T10:00:00Z"
+
+- sid: PN2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e
+  phone_number: "+14155550199"
+  friendly_name: "Marketing Campaigns"
+  capabilities:
+    sms: true
+    mms: false
+    voice: false
+  status: in-use
+  sms_url: "https://example.com/marketing-sms"
+  voice_url: null
+  date_created: "2025-02-12T08:30:00Z"
+
+- sid: PN3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f
+  phone_number: "+18005551234"
+  friendly_name: "Toll-Free Support"
+  capabilities:
+    sms: true
+    mms: true
+    voice: true
+  status: in-use
+  sms_url: "https://example.com/support-sms"
+  voice_url: "https://example.com/support-voice"
+  date_created: "2025-03-01T15:00:00Z"
+
+messaging_services:
+- sid: MG1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d
+  friendly_name: "Transactional Alerts"
+  inbound_request_url: "https://example.com/inbound"
+  status_callback: "https://example.com/status"
+  date_created: "2025-01-10T12:00:00Z"
+  date_updated: "2025-03-01T08:00:00Z"
+
+- sid: MG2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e
+  friendly_name: "Marketing Campaigns"
+  inbound_request_url: "https://example.com/marketing-inbound"
+  status_callback: "https://example.com/marketing-status"
+  date_created: "2025-02-01T14:00:00Z"
+  date_updated: "2025-03-05T10:00:00Z"
+
+- sid: MG3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f
+  friendly_name: "2FA Verification"
+  inbound_request_url: null
+  status_callback: "https://example.com/verify-status"
+  date_created: "2025-03-01T16:00:00Z"
+  date_updated: "2025-03-01T16:00:00Z"
+
+usage_records:
+- category: sms
+  description: "SMS Messages"
+  count: 12847
+  count_unit: messages
+  usage: "12847"
+  usage_unit: messages
+  price: "96.35"
+  price_unit: USD
+  start_date: "2025-03-01"
+  end_date: "2025-03-12"
+
+- category: mms
+  description: "MMS Messages"
+  count: 342
+  count_unit: messages
+  usage: "342"
+  usage_unit: messages
+  price: "6.84"
+  price_unit: USD
+  start_date: "2025-03-01"
+  end_date: "2025-03-12"
+
+- category: phonenumbers
+  description: "Phone Numbers"
+  count: 3
+  count_unit: phone numbers
+  usage: "3"
+  usage_unit: phone numbers
+  price: "3.00"
+  price_unit: USD
+  start_date: "2025-03-01"
+  end_date: "2025-03-12"

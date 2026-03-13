@@ -1,0 +1,398 @@
+openapi: 3.0.3
+info:
+  title: Twilio Messaging API
+  description: >
+    Send and receive SMS, MMS, and WhatsApp messages globally.
+    Manage messaging services, phone numbers, and delivery status.
+  version: "2010-04-01"
+  contact:
+    name: Twilio
+    url: https://www.twilio.com/docs/sms
+servers:
+  - url: https://api.twilio.com
+    description: Twilio REST API
+tags:
+  - name: messages
+    description: Send and manage SMS/MMS messages
+  - name: phone_numbers
+    description: Manage incoming phone numbers
+  - name: messaging_services
+    description: Manage messaging services for scalable sending
+  - name: usage_records
+    description: View account usage and billing records
+
+paths:
+  /2010-04-01/Accounts/{AccountSid}/Messages.json:
+    post:
+      operationId: createMessage
+      tags: [messages]
+      summary: Send a new SMS or MMS message
+      parameters:
+        - name: AccountSid
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [To, From, Body]
+              properties:
+                To: { type: string, description: "Destination phone number" }
+                From: { type: string, description: "Twilio phone number to send from" }
+                Body: { type: string, description: "Message text (up to 1600 chars)" }
+                StatusCallback: { type: string, description: "Webhook URL for status updates" }
+                MediaUrl: { type: array, items: { type: string }, description: "URLs of media to attach (MMS)" }
+      responses:
+        "201":
+          description: Message created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Message" }
+    get:
+      operationId: listMessages
+      tags: [messages]
+      summary: List all messages
+      parameters:
+        - name: AccountSid
+          in: path
+          required: true
+          schema: { type: string }
+        - name: To
+          in: query
+          schema: { type: string }
+        - name: From
+          in: query
+          schema: { type: string }
+        - name: DateSent
+          in: query
+          schema: { type: string }
+      responses:
+        "200":
+          description: List of messages
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    items: { $ref: "#/components/schemas/Message" }
+                  page_size: { type: integer }
+
+  /2010-04-01/Accounts/{AccountSid}/Messages/{MessageSid}.json:
+    get:
+      operationId: fetchMessage
+      tags: [messages]
+      summary: Fetch a specific message by SID
+      parameters:
+        - name: AccountSid
+          in: path
+          required: true
+          schema: { type: string }
+        - name: MessageSid
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Message details
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Message" }
+    post:
+      operationId: updateMessage
+      tags: [messages]
+      summary: Update a message (e.g. cancel queued message)
+      parameters:
+        - name: AccountSid
+          in: path
+          required: true
+          schema: { type: string }
+        - name: MessageSid
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Body: { type: string }
+                Status: { type: string, enum: [canceled] }
+      responses:
+        "200":
+          description: Updated message
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Message" }
+    delete:
+      operationId: deleteMessage
+      tags: [messages]
+      summary: Delete a message record
+      parameters:
+        - name: AccountSid
+          in: path
+          required: true
+          schema: { type: string }
+        - name: MessageSid
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "204":
+          description: Message deleted
+
+  /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers.json:
+    get:
+      operationId: listIncomingPhoneNumbers
+      tags: [phone_numbers]
+      summary: List phone numbers on the account
+      parameters:
+        - name: AccountSid
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Phone number list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  incoming_phone_numbers:
+                    type: array
+                    items: { $ref: "#/components/schemas/PhoneNumber" }
+    post:
+      operationId: createIncomingPhoneNumber
+      tags: [phone_numbers]
+      summary: Purchase and provision a phone number
+      parameters:
+        - name: AccountSid
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                PhoneNumber: { type: string }
+                FriendlyName: { type: string }
+                SmsUrl: { type: string }
+                VoiceUrl: { type: string }
+      responses:
+        "201":
+          description: Phone number provisioned
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PhoneNumber" }
+
+  /2010-04-01/Accounts/{AccountSid}/IncomingPhoneNumbers/{PhoneNumberSid}.json:
+    get:
+      operationId: fetchIncomingPhoneNumber
+      tags: [phone_numbers]
+      summary: Fetch a specific phone number
+      parameters:
+        - name: AccountSid
+          in: path
+          required: true
+          schema: { type: string }
+        - name: PhoneNumberSid
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Phone number details
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PhoneNumber" }
+    delete:
+      operationId: deleteIncomingPhoneNumber
+      tags: [phone_numbers]
+      summary: Release a phone number
+      parameters:
+        - name: AccountSid
+          in: path
+          required: true
+          schema: { type: string }
+        - name: PhoneNumberSid
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "204":
+          description: Phone number released
+
+  /2010-04-01/Accounts/{AccountSid}/Messages/{MessageSid}/Media.json:
+    get:
+      operationId: listMedia
+      tags: [messages]
+      summary: List media attachments for a message
+      parameters:
+        - name: AccountSid
+          in: path
+          required: true
+          schema: { type: string }
+        - name: MessageSid
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Media list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  media_list:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        sid: { type: string }
+                        content_type: { type: string }
+                        uri: { type: string }
+
+  /2010-04-01/Accounts/{AccountSid}/Usage/Records.json:
+    get:
+      operationId: listUsageRecords
+      tags: [usage_records]
+      summary: View usage records for the account
+      parameters:
+        - name: AccountSid
+          in: path
+          required: true
+          schema: { type: string }
+        - name: Category
+          in: query
+          schema: { type: string, enum: [sms, mms, calls, phonenumbers] }
+        - name: StartDate
+          in: query
+          schema: { type: string, format: date }
+        - name: EndDate
+          in: query
+          schema: { type: string, format: date }
+      responses:
+        "200":
+          description: Usage records
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  usage_records:
+                    type: array
+                    items: { $ref: "#/components/schemas/UsageRecord" }
+
+  /2010-04-01/Accounts/{AccountSid}/Messaging/Services.json:
+    get:
+      operationId: listMessagingServices
+      tags: [messaging_services]
+      summary: List messaging services
+      parameters:
+        - name: AccountSid
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Messaging services list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  services:
+                    type: array
+                    items: { $ref: "#/components/schemas/MessagingService" }
+    post:
+      operationId: createMessagingService
+      tags: [messaging_services]
+      summary: Create a messaging service
+      parameters:
+        - name: AccountSid
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [FriendlyName]
+              properties:
+                FriendlyName: { type: string }
+                InboundRequestUrl: { type: string }
+                StatusCallback: { type: string }
+                UseInboundWebhookOnNumber: { type: boolean }
+      responses:
+        "201":
+          description: Messaging service created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/MessagingService" }
+
+components:
+  schemas:
+    Message:
+      type: object
+      properties:
+        sid: { type: string }
+        account_sid: { type: string }
+        to: { type: string }
+        from: { type: string }
+        body: { type: string }
+        status: { type: string, enum: [queued, sending, sent, delivered, undelivered, failed, canceled] }
+        direction: { type: string, enum: [inbound, outbound-api, outbound-call, outbound-reply] }
+        num_segments: { type: integer }
+        price: { type: string }
+        price_unit: { type: string }
+        error_code: { type: integer, nullable: true }
+        error_message: { type: string, nullable: true }
+        date_created: { type: string, format: date-time }
+        date_sent: { type: string, format: date-time, nullable: true }
+        date_updated: { type: string, format: date-time }
+
+    PhoneNumber:
+      type: object
+      properties:
+        sid: { type: string }
+        phone_number: { type: string }
+        friendly_name: { type: string }
+        capabilities: { type: object, properties: { sms: { type: boolean }, mms: { type: boolean }, voice: { type: boolean } } }
+        status: { type: string, enum: [in-use, released] }
+        sms_url: { type: string }
+        voice_url: { type: string }
+        date_created: { type: string, format: date-time }
+
+    UsageRecord:
+      type: object
+      properties:
+        category: { type: string }
+        description: { type: string }
+        count: { type: integer }
+        count_unit: { type: string }
+        usage: { type: string }
+        usage_unit: { type: string }
+        price: { type: string }
+        price_unit: { type: string }
+        start_date: { type: string, format: date }
+        end_date: { type: string, format: date }
+
+    MessagingService:
+      type: object
+      properties:
+        sid: { type: string }
+        friendly_name: { type: string }
+        inbound_request_url: { type: string }
+        status_callback: { type: string }
+        date_created: { type: string, format: date-time }
+        date_updated: { type: string, format: date-time }

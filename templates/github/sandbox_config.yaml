@@ -1,0 +1,67 @@
+# GitHub REST API — Sandbox Configuration
+
+resources:
+  repos:
+    id_field: id
+    id_pattern: null
+    states:
+    - active
+    - archived
+    initial_state: active
+    status_field: archived
+    transitions:
+      active:
+      - archived
+      archived:
+      - active
+
+  issues:
+    id_field: number
+    id_pattern: null
+    states:
+    - open
+    - closed
+    initial_state: open
+    status_field: state
+    transitions:
+      open:
+      - closed
+      closed:
+      - open
+
+  pulls:
+    id_field: number
+    id_pattern: null
+    states:
+    - open
+    - closed
+    initial_state: open
+    status_field: state
+    transitions:
+      open:
+      - closed
+      closed:
+      - open
+
+  users:
+    id_field: id
+    id_pattern: null
+    states: []
+    initial_state: null
+    status_field: null
+    transitions: {}
+
+auth:
+  enabled: true
+  mode: relaxed
+  credentials_count: 1
+
+webhooks:
+  events:
+  - issues.opened
+  - issues.closed
+  - pull_request.opened
+  - pull_request.closed
+  - pull_request.merged
+  - push
+  - repository.created

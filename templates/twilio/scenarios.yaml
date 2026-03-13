@@ -1,0 +1,63 @@
+# Twilio Messaging API — Scenarios
+
+scenarios:
+  default:
+    description: Happy path — messages are queued, sent, and delivered successfully.
+    auth_enabled: true
+    overrides: []
+
+  auth_failure:
+    description: All requests fail with 401 — simulating invalid or expired API credentials.
+    auth_enabled: false
+    overrides:
+    - operation_id: '*'
+      response_status: 401
+      error_code: AUTHENTICATION_FAILURE
+      error_detail: "Authenticate. Invalid credentials provided."
+
+  rate_limited:
+    description: All requests return 429 — simulating rate limit enforcement.
+    auth_enabled: true
+    overrides:
+    - operation_id: '*'
+      response_status: 429
+      error_code: RATE_LIMITED
+      error_detail: "Too many requests. Rate limit exceeded — retry after 60 seconds."
+
+  message_undeliverable:
+    description: All sent messages end up as undelivered — simulating carrier rejection.
+    auth_enabled: true
+    overrides:
+    - operation_id: createMessage
+      response_status: 201
+      response_body_override:
+        status: undelivered
+        error_code: 30003
+        error_message: "Unreachable destination handset"
+
+  invalid_number:
+    description: Message creation fails with 400 — simulating an invalid destination number.
+    auth_enabled: true
+    overrides:
+    - operation_id: createMessage
+      response_status: 400
+      error_code: INVALID_PARAMETER
+      error_detail: "The 'To' number +10000000000 is not a valid phone number."
+
+  queue_overflow:
+    description: Messages are accepted but stuck in queued state — simulating delivery delays.
+    auth_enabled: true
+    overrides:
+    - operation_id: createMessage
+      response_status: 201
+      response_body_override:
+        status: queued
+
+  international_blocked:
+    description: International messages fail — simulating geo-permissions restriction.
+    auth_enabled: true
+    overrides:
+    - operation_id: createMessage
+      response_status: 403
+      error_code: GEO_PERMISSION_DENIED
+      error_detail: "Permission to send SMS to this country is not enabled for your account."
